@@ -8,7 +8,6 @@
   header {
     justify-content: space-between;
     border-bottom: var(--border);
-    position: absolute;
     padding: 0 16px;
     height: 52px;
     width: 100%;

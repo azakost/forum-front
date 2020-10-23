@@ -5,7 +5,7 @@ TODO:
 - [x] Adaptive main layout
 - [x] Hash-based router setup
 - [ ] Registration
-- [ ] Login-logout
+- [x] Login-logout
 - [ ] Posts view
 - [ ] Write post component (categories choosing, )
 - [ ] Post reactions

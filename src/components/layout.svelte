@@ -1,6 +1,8 @@
 <script>
   import { location } from "svelte-spa-router";
+  import { username, fullname, id } from "../main";
   $: page = $location.split("/")[1];
+  $: userid = $id;
 </script>
 
 <style>
@@ -78,6 +80,9 @@
       right: 0;
       top: 0;
     }
+    .hide {
+      display: none;
+    }
   }
 
   /* Menu links */
@@ -113,10 +118,10 @@
     position: absolute;
     bottom: 0;
     left: 0;
+    z-index: 9;
   }
 
   /* Links highlight */
-
   [aria-current="page"] {
     color: var(--secondary-color);
     font-weight: bold;
@@ -128,7 +133,6 @@
 </style>
 
 <main>
-
   <div class="menu">
     <a href="/#" aria-current={page == '' || page == 'posts' ? 'page' : ''}>
       <i class="help-circle" />
@@ -146,23 +150,32 @@
       <i class="award" />
       <span>Рейтинг</span>
     </a>
-
   </div>
 
   <div class="basic">
-    <a href="/#/profile" class="login">
-      <img src="placeholder.png" alt="" />
-      <li>
-        <ul>Hello, student!</ul>
-        <ul>Please, log in...</ul>
-      </li>
-    </a>
+    {#if $username != ''}
+      <a href="/#/profile" class="login {page == 'profile' ? 'hide' : ''}">
+        <img
+          src="http://localhost:8080/avatars/{userid}.png"
+          alt=""
+          on:error={() => (userid = 0)} />
+        <li>
+          <ul>{$fullname}</ul>
+          <ul>@{$username}</ul>
+        </li>
+      </a>
+    {:else}
+      <a href="/#/login" class="login {page == 'login' ? 'hide' : ''}">
+        <img src="lock.png" alt="" />
+        <li>
+          <ul>Привет, студент!</ul>
+          <ul>Залогинься плиз...</ul>
+        </li>
+      </a>
+    {/if}
     <div class="content">
       <slot />
     </div>
-
   </div>
-
   <div class="rightbar">Rightbar</div>
-
 </main>
