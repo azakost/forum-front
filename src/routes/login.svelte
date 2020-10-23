@@ -2,7 +2,7 @@
   import Head from "../components/head.svelte";
   import Input from "../components/input.svelte";
   import Button from "../components/button.svelte";
-  import { post, username, fullname } from "../main";
+  import { post, username, fullname, id } from "../main";
   import { push } from "svelte-spa-router";
 
   $: user = $username;
@@ -15,6 +15,9 @@
       let json = await res.json();
       username.set(json.username);
       fullname.set(json.fullname);
+      id.set(0);
+      id.set(json.userID);
+      localStorage.setItem("id", json.userID);
       localStorage.setItem("username", json.username);
       localStorage.setItem("fullname", json.fullname);
       push("/");

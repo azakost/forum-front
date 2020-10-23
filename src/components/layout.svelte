@@ -1,8 +1,8 @@
 <script>
   import { location } from "svelte-spa-router";
-  import { username, fullname, id } from "../main";
-  $: page = $location.split("/")[1];
+  import { username, fullname, id, update } from "../main";
   $: userid = $id;
+  $: page = $location.split("/")[1];
 </script>
 
 <style>
@@ -156,9 +156,8 @@
     {#if $username != ''}
       <a href="/#/profile" class="login {page == 'profile' ? 'hide' : ''}">
         <img
-          src="http://localhost:8080/avatars/{userid}.png"
-          alt=""
-          on:error={() => (userid = 0)} />
+          src="http://localhost:8080/avatars/{userid}.jpg?update={$update}"
+          alt="" />
         <li>
           <ul>{$fullname}</ul>
           <ul>@{$username}</ul>
