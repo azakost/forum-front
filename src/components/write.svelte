@@ -2,8 +2,8 @@
   import { host } from "../main";
   import { onMount } from "svelte";
 
-  export let question;
-  export let cats = [];
+  let question;
+  let cats = [];
 
   onMount(async () => {
     let res = await fetch(host + "/api/categories");
@@ -26,13 +26,13 @@
 
 <style>
   textarea {
-    width: 100%;
     background: var(--input-color);
-    box-sizing: border-box;
     color: var(--text-color);
-    padding: 20px;
+    box-sizing: border-box;
     line-height: 1.8;
     font-size: 12px;
+    padding: 20px;
+    width: 100%;
   }
   textarea {
     height: 96px;
@@ -44,18 +44,18 @@
     position: relative;
   }
   .tags {
+    box-sizing: border-box;
     position: absolute;
-    bottom: 0;
     padding: 20px;
     width: 100%;
-    box-sizing: border-box;
+    bottom: 0;
   }
   .tags label {
+    color: var(--secondary-color);
     margin-right: 16px;
     font-size: 12px;
     cursor: pointer;
-    opacity: 0.3;
-    color: var(--secondary-color);
+    opacity: 0.2;
   }
   input {
     display: none;
@@ -64,17 +64,32 @@
     opacity: 1;
   }
   span {
-    float: right;
-    font-size: 10px;
-    line-height: 25px;
     color: var(--secondary-color);
-    opacity: 0.3;
+    line-height: 25px;
+    font-size: 10px;
+    float: right;
+    opacity: 0.2;
+  }
+  .bottom {
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    display: flex;
+    border-bottom: var(--border);
+  }
+  button {
+    background: var(--secondary-color);
+    color: var(--text-color);
+    border-radius: 50px;
+    padding: 6px 12px;
+    cursor: pointer;
+    border: none;
   }
 </style>
 
 <div class="text">
   <textarea
-    placeholder="Question breif"
+    placeholder="На чем застряли?"
     maxlength="140"
     bind:value={question}
     on:keyup={e => autosize(e, 34)} />
@@ -86,4 +101,8 @@
     {/each}
     <span>{count}</span>
   </div>
+</div>
+<div class="bottom">
+  <i class="maximize" />
+  <button on:click>Спросить сообщество</button>
 </div>
