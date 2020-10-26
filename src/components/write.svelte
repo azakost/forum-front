@@ -45,6 +45,7 @@
     if (res.ok) {
       question = "";
       disabled = true;
+      chosen = [];
       document.querySelectorAll("input:checked").forEach(i => {
         i.checked = false;
       });
