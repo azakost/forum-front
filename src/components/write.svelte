@@ -44,7 +44,15 @@
     });
     if (res.ok) {
       question = "";
-      // re-render post page
+      disabled = true;
+      document.querySelectorAll("input:checked").forEach(i => {
+        i.checked = false;
+      });
+    } else {
+      if (res.status == 403) {
+        localStorage.clear();
+        location.reload();
+      }
     }
   }
 </script>
@@ -132,5 +140,7 @@
 </div>
 <div class="bottom">
   <i class="chevrons-down" />
-  <button on:click={postQuestion} {disabled}>Спросить сообщество</button>
+  <button on:click={postQuestion} {disabled} on:click>
+    Спросить сообщество
+  </button>
 </div>

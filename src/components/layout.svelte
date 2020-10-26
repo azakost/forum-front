@@ -20,6 +20,8 @@
     flex-direction: column;
     overflow: hidden;
     display: flex;
+    background: var(--bg-color);
+    z-index: 9;
   }
 
   .basic {

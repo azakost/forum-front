@@ -4,16 +4,49 @@
   export let PostID;
   export let Title;
   export let Username;
-  export let UserID;
+  export let AuthorID;
   export let Comments;
   export let Likes;
   export let Dislikes;
+  export let Reaction;
+  export let Posted;
+  export let Text;
+  export let Categories;
+
+  function formatDate(secs) {
+    let t = new Date(1970, 0, 1);
+    t.setSeconds(secs);
+    let x = new Date();
+    let timezone = -x.getTimezoneOffset() / 60;
+    t.setHours(t.getHours() + timezone);
+    let diff = new Date() - t;
+    let sec = Math.floor(diff / 1000);
+    if (sec < 60) {
+      return "сейчас";
+    }
+    let min = Math.floor(diff / 60000);
+    if (min < 60) {
+      return min + " мин. назад";
+    }
+
+    let d = t;
+    d = [
+      "0" + d.getDate(),
+      "0" + (d.getMonth() + 1),
+      "" + d.getFullYear(),
+      "0" + d.getHours(),
+      "0" + d.getMinutes()
+    ].map(component => component.slice(-2));
+
+    return d.slice(0, 3).join(".") + " " + d.slice(3).join(":");
+  }
 </script>
 
 <style>
   img {
     height: 49px;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   .quest {
@@ -49,13 +82,13 @@
 
   .head > span {
     font-size: 15px;
-    font-weight: bold;
   }
 
   p {
     font-size: 14px;
     line-height: 1.6;
     margin-bottom: 14px;
+    font-weight: 200;
   }
 
   .card {
@@ -77,16 +110,31 @@
   .head > span {
     cursor: pointer;
   }
+
+  .like,
+  .dislike {
+    color: var(--secondary-color);
+  }
+
+  small {
+    opacity: 0.3;
+  }
 </style>
 
 <div class="card">
   <div class="quest">
-    <img src="{host}/avatars/{UserID}" alt="" on:error={(UserID = 0)} />
+    <img
+      src="{host}/avatars/{AuthorID}.jpg"
+      alt=""
+      on:error={(AuthorID = 0)}
+      on:click={push('/users/' + AuthorID)} />
     <div class="base">
-      <div class="head">
-        <span on:click={push('/users/' + Username)}>@{Username}</span>
-      </div>
       <a href="/#/posts/{PostID}" class="text">
+        <div class="head">
+          <span>@{Username}</span>
+          &ensp;&bull;&ensp;
+          <small>{formatDate(Posted)}</small>
+        </div>
         <p>{Title}</p>
       </a>
     </div>
@@ -97,11 +145,11 @@
       {Comments}
     </span>
     <span>
-      <i class="thumbs-up" />
+      <i class="thumbs-up {Reaction}" />
       {Likes}
     </span>
     <span>
-      <i class="thumbs-down" />
+      <i class="thumbs-down {Reaction}" />
       {Dislikes}
     </span>
     <span class="more">
