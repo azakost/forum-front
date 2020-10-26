@@ -12,8 +12,10 @@
   });
 
   async function update() {
-    let res = await fetch(host + "/api/posts");
-    posts = await res.json();
+    setTimeout(async () => {
+      let res = await fetch(host + "/api/posts");
+      posts = await res.json();
+    }, 200);
   }
 </script>
 
