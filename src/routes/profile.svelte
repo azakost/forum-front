@@ -1,7 +1,8 @@
 <script>
   import Head from "../components/head.svelte";
   import { push } from "svelte-spa-router";
-  import { post, upload, username, fullname, id, update } from "../main";
+  import { post, upload, username, fullname, id, update, host } from "../main";
+
   $: userid = $id;
 
   async function logout() {
@@ -13,9 +14,16 @@
   }
 
   let files;
-  async function uploadAva() {
-    let res = await upload("/uploadava", "avatar", files);
-    if (res.ok) update.set(Date.now());
+  function uploadAva() {
+    setTimeout(async () => {
+      let res = await upload("/uploadava", "avatar", files);
+      if (res.ok) {
+        let i = $id;
+        id.set(0);
+        id.set(i);
+        update.set(Date.now());
+      }
+    }, 200);
   }
 </script>
 
@@ -29,16 +37,32 @@
 
   img {
     height: 200px;
+    border-radius: 50%;
+  }
+
+  .imgUpload {
+    position: relative;
+  }
+
+  .imgUpload > i {
+    color: red;
+    position: absolute;
+  }
+
+  input {
+    position: absolute;
+    opacity: 1;
   }
 </style>
 
 <Head title={'Профиль'} />
 <i class="log-out" on:click={logout} />
 
-<img
-  src="http://localhost:8080/avatars/{userid}.jpg?update={$update}"
-  alt=""
-  on:error={(userid = 0)} />
-
-<input type="file" accept="image/jpeg" bind:files />
-<button on:click={uploadAva}>Upload</button>
+<div class="imgUpload">
+  <i class="edit" />
+  <input type="file" accept="image/jpeg" bind:files on:input={uploadAva} />
+  <img
+    src="{host}/avatars/{userid}.jpg?u={$update}"
+    on:error={() => (userid = 0)}
+    alt="" />
+</div>

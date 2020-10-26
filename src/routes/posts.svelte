@@ -2,6 +2,6 @@
   import Head from "../components/head.svelte";
 </script>
 
-<Head title={'Вопросы'}>
+<Head title="Вопросы">
   <i class="filter" />
 </Head>

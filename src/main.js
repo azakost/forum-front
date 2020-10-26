@@ -11,9 +11,16 @@ export const fullname = writable(inStore("fullname", ""));
 export const id = writable(inStore("id", 0));
 export const update = writable("");
 
-const host = "http://localhost:8080/api";
+export const host = "http://localhost:8080";
+
+export const categories = async () => {
+  let res = await fetch(host + "/api/categories");
+  let json = await res.json();
+  return json;
+};
+
 export const post = async (url, body) => {
-  let res = await fetch(host + url, {
+  let res = await fetch(host + "/api" + url, {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(body),
@@ -22,9 +29,9 @@ export const post = async (url, body) => {
 };
 
 export const upload = async (url, name, files) => {
-  const formData = new FormData();
+  let formData = new FormData();
   formData.append(name, files[0]);
-  let res = await fetch(host + url, {
+  let res = await fetch(host + "/api" + url, {
     "Content-Type": "multipart/form-data",
     credentials: "include",
     method: "POST",

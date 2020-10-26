@@ -1,5 +1,6 @@
 <script>
   import { push } from "svelte-spa-router";
+  import { host } from "../main";
   export let PostID;
   export let Title;
   export let Username;
@@ -80,7 +81,7 @@
 
 <div class="card">
   <div class="quest">
-    <img src="/avatars/{UserID}" alt="" on:error={(UserID = 0)} />
+    <img src="{host}/avatars/{UserID}" alt="" on:error={(UserID = 0)} />
     <div class="base">
       <div class="head">
         <span on:click={push('/users/' + Username)}>@{Username}</span>
