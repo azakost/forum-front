@@ -1,10 +1,12 @@
 <script>
-  import { host } from "../main";
+  import { host, post } from "../main";
   import { onMount } from "svelte";
 
-  let question;
-  let cats = [];
+  $: question = "";
+  $: chosen = [];
+  $: disabled = true;
 
+  let cats = [];
   onMount(async () => {
     let res = await fetch(host + "/api/categories");
     let json = await res.json();
@@ -21,6 +23,29 @@
     count = 140 - question.length;
     e.currentTarget.style.height = "1px";
     e.currentTarget.style.height = size + e.currentTarget.scrollHeight + "px";
+    disabled = question.length < 3 || chosen.length == 0;
+  }
+
+  function choose() {
+    chosen = [];
+    cats.forEach(c => {
+      if (c.value) {
+        chosen.push(c.id);
+      }
+    });
+    disabled = question.length < 3 || chosen.length == 0;
+  }
+
+  async function postQuestion() {
+    let res = await post("/writepost", {
+      title: question,
+      text: "",
+      categories: chosen
+    });
+    if (res.ok) {
+      question = "";
+      // re-render post page
+    }
   }
 </script>
 
@@ -85,6 +110,9 @@
     cursor: pointer;
     border: none;
   }
+  button:disabled {
+    opacity: 0.3;
+  }
 </style>
 
 <div class="text">
@@ -96,13 +124,13 @@
 
   <div class="tags">
     {#each cats as { id, name, value }}
-      <input type="checkbox" {id} bind:checked={value} />
+      <input type="checkbox" {id} bind:checked={value} on:change={choose} />
       <label for={id}>#{name}</label>
     {/each}
     <span>{count}</span>
   </div>
 </div>
 <div class="bottom">
-  <i class="maximize" />
-  <button on:click>Спросить сообщество</button>
+  <i class="chevrons-down" />
+  <button on:click={postQuestion} {disabled}>Спросить сообщество</button>
 </div>
