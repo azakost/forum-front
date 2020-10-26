@@ -87,7 +87,7 @@
   p {
     font-size: 14px;
     line-height: 1.6;
-    margin-bottom: 14px;
+    margin-bottom: 7px;
     font-weight: 200;
   }
 
@@ -119,6 +119,14 @@
   small {
     opacity: 0.3;
   }
+  .tags {
+    margin-bottom: 16px;
+  }
+  .tags > span {
+    opacity: 0.3;
+    font-size: 12px;
+    margin-right: 8px;
+  }
 </style>
 
 <div class="card">
@@ -136,6 +144,11 @@
           <small>{formatDate(Posted)}</small>
         </div>
         <p>{Title}</p>
+        <div class="tags">
+          {#each Categories as cat}
+            <span>#{cat.Name}</span>
+          {/each}
+        </div>
       </a>
     </div>
   </div>
