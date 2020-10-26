@@ -2,12 +2,13 @@
 
 TODO:
 
-- [x] Adaptive main layout
+- [x] Adaptive layout
 - [x] Hash-based router setup
 - [x] Registration
 - [x] Login-logout
-- [ ] Posts view
-- [ ] Write post component (categories choosing, )
+- [x] Posts view
+- [x] Write short post
+- [ ] Write long post (text formating, image attach)
 - [ ] Post reactions
 - [ ] Comment post
 - [ ] Comment reactions
