@@ -8,7 +8,10 @@ TODO:
 - [x] Login-logout
 - [x] Posts view
 - [x] Write short post
-- [ ] Write long post (text formating, image attach)
+- [x] Write long post (+image attach)
+- [ ] Posts filtering & search
+- [ ] Single post view
+- [ ] Long post text formatting
 - [ ] Post reactions
 - [ ] Comment post
 - [ ] Comment reactions
