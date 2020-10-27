@@ -1,3 +1,4 @@
+import Post from "./routes/post.svelte";
 import Posts from "./routes/posts.svelte";
 import Login from "./routes/login.svelte";
 import Profile from "./routes/profile.svelte";
@@ -9,3 +10,4 @@ routes.set("/", Posts);
 routes.set("/login", Login);
 routes.set("/profile", Profile);
 routes.set("/register", Register);
+routes.set("/posts/:id", Post);

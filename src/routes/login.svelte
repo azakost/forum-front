@@ -2,10 +2,10 @@
   import Head from "../components/head.svelte";
   import Input from "../components/input.svelte";
   import Button from "../components/button.svelte";
-  import { post, username, fullname, id } from "../main";
+  import { post, tmpuser, username, fullname, id } from "../main";
   import { push } from "svelte-spa-router";
 
-  $: user = $username;
+  $: user = $tmpuser;
   $: pass = "";
   let shake = "";
 

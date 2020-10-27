@@ -23,6 +23,7 @@
         id.set(i);
         update.set(Date.now());
       }
+      console.log(res);
     }, 200);
   }
 </script>
@@ -30,14 +31,14 @@
 <style>
   .log-out {
     position: absolute;
-    top: 17px;
-    right: 16px;
     font-size: 18px;
+    right: 16px;
+    top: 17px;
   }
 
   img {
-    height: 200px;
     border-radius: 50%;
+    height: 200px;
   }
 
   .imgUpload {

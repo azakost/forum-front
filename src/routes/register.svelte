@@ -3,7 +3,7 @@
   import Input from "../components/input.svelte";
   import Button from "../components/button.svelte";
   import { push } from "svelte-spa-router";
-  import { post, username } from "../main";
+  import { post, tmpuser } from "../main";
 
   $: user = "";
   $: full = "";
@@ -21,7 +21,7 @@
     });
 
     if (res.ok) {
-      username.set(username);
+      tmpuser.set(user);
       push("/login");
     } else {
       let errs = await res.json();
