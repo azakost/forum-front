@@ -1,5 +1,6 @@
 <script>
   import { username, cats } from "../main";
+  import Button from "../components/button.svelte";
   export let title;
   export let longtext;
   export let chosenCats;
@@ -9,7 +10,7 @@
 
   // Limitators
   $: disabled = !(title.length > 3 && chosenCats.length != 0);
-  $: disabledCats = chosenCats.length > 2;
+  $: disabledCats = chosenCats.length > 1;
 
   // Small fix in case if form has been scrolled for a little
   const scrollTop = () =>
@@ -87,9 +88,12 @@
   .editor {
     background: var(--input-color);
     border-top: var(--border);
-    overflow: auto;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    font-weight: 200;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow: auto;
   }
 
   .editor[aria-checked="true"]:empty:not(:focus):before {
@@ -118,17 +122,8 @@
     opacity: 0.3;
   }
 
-  button {
-    background: var(--secondary-color);
-    color: var(--text-color);
-    border-radius: 50px;
-    padding: 6px 12px;
-    cursor: pointer;
-    border: none;
-  }
-
-  button:disabled {
-    opacity: 0.3;
+  i {
+    opacity: 0.5;
   }
 
   i:first-child {
@@ -268,9 +263,12 @@
           </div>
           <div>
             <span>{140 - title.length}</span>
-            <button on:click {disabled} on:click={() => (toggle = 'false')}>
-              Спросить
-            </button>
+            <Button
+              name={'Спросить'}
+              small={true}
+              on:click
+              {disabled}
+              on:click={() => toggle == 'true' && (toggle = 'false')} />
           </div>
         </div>
       </div>

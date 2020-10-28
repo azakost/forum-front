@@ -47,3 +47,7 @@ textarea:focus,
 button:focus {
   outline: none;
 }
+
+.form {
+  padding: 15px 40px 0;
+}

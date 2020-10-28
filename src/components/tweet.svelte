@@ -1,5 +1,4 @@
 <script>
-  import { push } from "svelte-spa-router";
   import { host, update, formatDate } from "../main";
   export let PostID;
   export let Title;
@@ -8,140 +7,106 @@
   export let Comments;
   export let Likes;
   export let Dislikes;
-  export let Reaction;
   export let Posted;
-  export let Text; // ???????
   export let Categories;
 </script>
 
 <style>
-  img {
-    height: 39px;
-    border-radius: 50%;
-    cursor: pointer;
-    margin-top: 8px;
+  .tweet {
+    display: grid;
+    grid-template-columns: 70px auto;
+    border-bottom: var(--border);
+  }
+  .tweet:hover {
+    background: var(--input-color);
   }
 
-  .quest {
+  /* Left column */
+  .left-col {
     display: flex;
-  }
-
-  .base {
-    width: calc(100% - 49px);
-    padding-left: 16px;
-    min-height: 70px;
-  }
-
-  .head {
-    display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-bottom: 8px;
+    padding: 16px;
   }
 
-  .actions {
-    display: flex;
-    justify-content: space-around;
-    position: relative;
+  img {
+    height: 38px;
+    border-radius: 50%;
+    margin: 6px 0;
   }
 
-  .actions > span {
-    opacity: 0.5;
-  }
-
-  .actions > span:hover {
-    opacity: 1;
-    color: var(--secondary-color);
-  }
-
-  .head > span {
-    font-size: 15px;
-  }
-
-  p {
-    font-size: 14px;
-    line-height: 1.6;
-    margin-bottom: 7px;
+  i,
+  small {
+    margin-top: 4px;
+    font-size: 11px;
+    opacity: 0.4;
     font-weight: 200;
   }
 
-  .card {
-    border-bottom: 1px solid var(--border-color);
-    padding: 16px;
-    opacity: 1;
+  /* Right column */
+  .right-col {
+    padding: 16px 16px 16px 0;
+    display: flex;
+    flex-flow: column nowrap;
   }
 
-  .card:hover {
-    background-color: var(--input-color);
+  .head {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
 
-  .actions > span {
-    width: 17.6px;
-    white-space: nowrap;
-    font-size: 14px;
+  span {
+    font-weight: 100;
+    font-size: 13px;
+    opacity: 0.8;
   }
 
-  .actions > span,
-  .head > span {
-    cursor: pointer;
+  p {
+    font-weight: 200;
+    line-height: 1.8;
+    font-size: 13px;
+    margin: 8px 0;
   }
 
-  .like,
-  .dislike {
-    color: var(--secondary-color);
-  }
-
-  small {
-    opacity: 0.3;
-    font-size: 10px;
-    padding-top: 5px;
-  }
-  .tags {
-    margin-bottom: 16px;
-  }
-  .tags > span {
-    opacity: 0.3;
-    font-size: 12px;
-    margin-right: 8px;
+  .foot {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
   }
 </style>
 
-<div class="card">
-  <div class="quest">
-    <img
-      src="{host}/avatars/{AuthorID}.jpg?u={$update}"
-      alt=""
-      on:error={(AuthorID = 0)}
-      on:click={push('/users/' + AuthorID)} />
-    <div class="base">
-      <a href="/#/posts/{PostID}" class="text">
-        <div class="head">
-          <span>@{Username}</span>
-          <small>&ensp;&bull;&ensp;{formatDate(Posted)}</small>
-        </div>
-        <p>{Title}</p>
-        <div class="tags">
-          {#each Categories as cat}
-            <span>#{cat.Name}</span>
-          {/each}
-        </div>
-      </a>
+<div class="tweet">
+
+  <div class="left-col">
+    <a href="#/users/{AuthorID}">
+      <img
+        src="{host}/avatars/{AuthorID}.jpg?u={update}"
+        on:error={(AuthorID = 0)}
+        alt="" />
+    </a>
+    <i class="activity" />
+    <small>{Likes - Dislikes}</small>
+  </div>
+
+  <a class="right-col" href="#/posts/{PostID}">
+    <div class="head">
+      <span>@{Username}</span>
+      <small>{formatDate(Posted)}</small>
     </div>
-  </div>
-  <div class="actions">
-    <span on:click={push('/posts/' + PostID)}>
-      <i class="message-circle" />
-      {Comments}
-    </span>
-    <span>
-      <i class="thumbs-up {Reaction}" />
-      {Likes}
-    </span>
-    <span>
-      <i class="thumbs-down {Reaction}" />
-      {Dislikes}
-    </span>
-    <span class="more">
-      <i class="alert-circle" />
-    </span>
-  </div>
+    <p>{Title}</p>
+    <div class="foot">
+      <div>
+        {#each Categories as cat}
+          <small>#{cat.Name}</small>
+          &nbsp;
+        {/each}
+      </div>
+      <div>
+        <i class="message-square" />
+        <small>{Comments}</small>
+      </div>
+    </div>
+  </a>
+
 </div>

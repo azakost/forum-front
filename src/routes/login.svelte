@@ -29,9 +29,6 @@
 </script>
 
 <style>
-  .form {
-    padding: 15px 40px 0;
-  }
   i {
     margin-right: 4px;
   }

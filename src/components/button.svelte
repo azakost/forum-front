@@ -1,23 +1,32 @@
 <script>
   export let name;
   export let disabled = false;
+  export let small = false;
 </script>
 
 <style>
   button {
-    display: block;
-    width: 100%;
-    height: 38px;
     background: var(--secondary-color);
     color: var(--text-color);
-    border: none;
+    padding: 6px 12px;
     cursor: pointer;
-    margin-top: 16px;
+    border: none;
+    float: right;
   }
 
   button:disabled {
     opacity: 0.5;
   }
+
+  [aria-checked="false"] {
+    margin: 16px 0;
+    height: 38px;
+    width: 100%;
+  }
+
+  [aria-checked="true"] {
+    border-radius: 50px;
+  }
 </style>
 
-<button on:click {disabled}>{name}</button>
+<button aria-checked={small} on:click {disabled}>{name}</button>

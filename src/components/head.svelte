@@ -28,6 +28,10 @@
     display: none;
   }
 
+  h4 {
+    font-weight: 400;
+  }
+
   @media only screen and (max-width: 1078px) {
     div:last-child {
       display: block;

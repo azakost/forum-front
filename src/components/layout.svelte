@@ -1,8 +1,13 @@
 <script>
+  import Filter from "../rightbar/postsFilter.svelte";
+
   import { location } from "svelte-spa-router";
   import { username, fullname, id, update, host } from "../main";
   $: userid = $id;
   $: page = $location.split("/")[1];
+
+  const components = { "/": Filter };
+  let panel = components[$location];
 </script>
 
 <style>
@@ -93,6 +98,19 @@
     margin: 11px 0;
     display: flex;
     opacity: 0.8;
+    position: relative;
+  }
+
+  [aria-checked="true"] {
+    position: absolute;
+    top: -2px;
+    left: 36px;
+    background: #ff5858;
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid #ff8b8b;
   }
 
   i {
@@ -136,27 +154,31 @@
 
 <main>
   <div class="menu">
-    <a href="/#" aria-current={page == '' || page == 'posts' ? 'page' : ''}>
+    <a href="/#" aria-current={(page == '' || page == 'posts') && 'page'}>
       <i class="help-circle" />
       <span>Вопросы</span>
     </a>
-    <a href="/#/replies" aria-current={page == 'replies' ? 'page' : ''}>
-      <i class="message-circle" />
-      <span>Ответы</span>
-    </a>
-    <a href="/#/knowlege" aria-current={page == 'knowlege' ? 'page' : ''}>
+
+    <a href="/#/knowlege" aria-current={page == 'knowlege' && 'page'}>
       <i class="book-open" />
       <span>Знания</span>
     </a>
-    <a href="/#/ranking" aria-current={page == 'ranking' ? 'page' : ''}>
+
+    <a href="/#/ranking" aria-current={page == 'ranking' && 'page'}>
       <i class="award" />
       <span>Рейтинг</span>
+    </a>
+
+    <a href="/#/notify" aria-current={page == 'notify' && 'page'}>
+      <i class="bell" />
+      <span>Уведомления</span>
+      <small aria-checked="true" />
     </a>
   </div>
 
   <div class="basic">
     {#if $username != ''}
-      <a href="/#/profile" class="login {page == 'profile' ? 'hide' : ''}">
+      <a href="/#/profile" class="login {page == 'profile' && 'hide'}">
         <img
           src="{host}/avatars/{userid}.jpg?update={$update}"
           alt=""
@@ -167,7 +189,7 @@
         </li>
       </a>
     {:else}
-      <a href="/#/login" class="login {page == 'login' ? 'hide' : ''}">
+      <a href="/#/login" class="login {page == 'login' && 'hide'}">
         <img src="lock.png" alt="" />
         <li>
           <ul>Привет, студент!</ul>
@@ -179,5 +201,7 @@
       <slot />
     </div>
   </div>
-  <div class="rightbar">Rightbar</div>
+  <div class="rightbar">
+    <svelte:component this={panel} />
+  </div>
 </main>

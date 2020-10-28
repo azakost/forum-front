@@ -15,3 +15,4 @@ TODO:
 - [ ] Post reactions
 - [ ] Comment post
 - [ ] Comment reactions
+- [ ] Profile Edit (sex, age, social links)

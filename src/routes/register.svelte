@@ -35,12 +35,6 @@
   }
 </script>
 
-<style>
-  .form {
-    padding: 15px 40px 0;
-  }
-</style>
-
 <Head title={'Регистрация'} />
 
 <div class="form">

@@ -1,6 +1,6 @@
 <script>
   import Head from "../components/head.svelte";
-  import Write from "../components/write.svelte";
+  import Write from "../components/writePost.svelte";
   import Tweet from "../components/tweet.svelte";
   import { host, post, upload } from "../main";
   import { onMount } from "svelte";
