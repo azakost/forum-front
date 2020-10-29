@@ -1,39 +1,46 @@
 <script>
-  import { username, cats } from "../main";
+  import { username, cats, upload, host } from "../main";
   import Button from "../components/button.svelte";
+  import Textarea from "../components/textarea.svelte";
+  import { createEventDispatcher } from "svelte";
+  const dispatcher = createEventDispatcher();
   export let title;
   export let longtext;
   export let chosenCats;
-  export let files = null;
+  export let button = "Спросить";
+  export let fullsize = false;
 
   let toggle = "mixed";
+
+  if (fullsize) {
+    toggle = "undefined";
+  }
 
   // Limitators
   $: disabled = !(title.length > 3 && chosenCats.length != 0);
   $: disabledCats = chosenCats.length > 1;
 
   // Small fix in case if form has been scrolled for a little
-  const scrollTop = () =>
-    document.getElementsByClassName("tweets")[0].scrollTo(0, 0);
+  const scrollTop = () => {
+    let div = document.getElementsByClassName("scrollable")[0];
+    div.scrollTo(0, 0);
+    div.classList.remove("true");
+    div.classList.remove("false");
+    div.classList.add(toggle);
+  };
+
+  let files;
+  function addImage() {
+    setTimeout(async () => {
+      let res = await upload("/uploadimg", "image", files);
+      let url = await res.text();
+      longtext +=
+        '<img src="' + host + url + '" alt="" style="max-width:100%" /><br>';
+    }, 200);
+  }
 </script>
 
 <style>
-  /* Main layout */
-  .tweets {
-    height: calc(100vh - 52px);
-    overflow: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
-  .tweets::-webkit-scrollbar {
-    display: none;
-  }
-
-  .true {
-    overflow: hidden;
-  }
-
   .write {
     position: relative;
   }
@@ -41,7 +48,9 @@
   .short {
     background: var(--input-color);
     margin-bottom: 60px;
-    padding: 16px;
+  }
+  .cats {
+    padding: 0 16px 16px;
   }
 
   .long {
@@ -51,20 +60,6 @@
     margin-top: -60px;
     width: 100%;
     z-index: 9;
-  }
-
-  /* Textarea */
-  textarea {
-    color: var(--text-color);
-    box-sizing: border-box;
-    line-height: 1.7;
-    background: none;
-    overflow: hidden;
-    font-size: 13px;
-    height: 80px;
-    border: none;
-    resize: none;
-    width: 100%;
   }
 
   /* Categories picker */
@@ -131,8 +126,13 @@
   }
 
   /* Toggler */
+  [aria-checked="undefined"] {
+    height: calc(100vh - 236px);
+    padding: 16px;
+  }
+
   [aria-checked="true"] {
-    height: calc(100vh - 249px);
+    height: calc(100vh - 236px);
     animation: 0.3s down;
     padding: 16px;
   }
@@ -145,7 +145,7 @@
 
   @keyframes up {
     0% {
-      height: calc(100vh - 249px);
+      height: calc(100vh - 235px);
     }
     50% {
       height: cacl(50vh - 124px);
@@ -163,17 +163,13 @@
       height: cacl(50vh - 124px);
     }
     100% {
-      height: calc(100vh - 249px);
+      height: calc(100vh - 235px);
     }
   }
 
   @media only screen and (max-width: 500px) {
-    .tweets {
-      height: calc(100vh - 52px - 46px);
-    }
-
     [aria-checked="true"] {
-      height: calc(100vh - 249px - 46px);
+      height: calc(100vh - 235px - 46px);
       animation: 0.3s downm;
     }
 
@@ -183,7 +179,7 @@
 
     @keyframes upm {
       0% {
-        height: calc(100vh - 249px - 46px);
+        height: calc(100vh - 235px - 46px);
       }
       50% {
         height: cacl(50vh - 124px);
@@ -201,81 +197,88 @@
         height: cacl(50vh - 124px);
       }
       100% {
-        height: calc(100vh - 249px - 46px);
+        height: calc(100vh - 235px - 46px);
       }
     }
   }
 </style>
 
-<div class="tweets {toggle}">
-  <!-- Don't show form if user is not logged on -->
-  {#if $username != ''}
-    <div class="write">
-      <div class="short">
-        <textarea
-          placeholder="На чем застряли?"
-          bind:value={title}
-          maxlength="140" />
-        <div class="cats">
+<!-- Don't show form if user is not logged on -->
+{#if $username != ''}
+  <div class="write">
+    <div class="short">
+      <Textarea placeholder="На чем застряли?" bind:value={title} max="140" />
+      <div class="cats">
 
-          <!-- Render all categories from database -->
-          {#await cats() then cat}
-            {#each cat as { id, name }}
-              <input
-                {id}
-                type="checkbox"
-                bind:group={chosenCats}
-                value={id}
-                disabled={chosenCats.includes(id) ? false : disabledCats} />
-              <label for={id}>#{name}</label>
-            {/each}
-          {/await}
+        <!-- Render all categories from database -->
+        {#await cats() then cat}
+          {#each cat as { id, name }}
+            <input
+              {id}
+              type="checkbox"
+              bind:group={chosenCats}
+              value={id}
+              disabled={chosenCats.includes(id) ? false : disabledCats} />
+            <label for={id}>#{name}</label>
+          {/each}
+        {/await}
 
-        </div>
       </div>
-      <div class="long">
-        <div
-          placeholder="Расширенное пояснение"
-          bind:innerHTML={longtext}
-          contenteditable="true"
-          aria-checked={toggle}
-          class="editor" />
-        <div class="actions">
-          <div>
+    </div>
+    <div class="long">
+      <div
+        placeholder="Расширенное пояснение"
+        bind:innerHTML={longtext}
+        contenteditable="true"
+        aria-checked={toggle}
+        class="editor" />
+      <div class="actions">
+        <div>
 
-            <!-- Toggle full form opening & closing if clicked on chevron icon -->
+          <!-- Toggle full form opening & closing if clicked on chevron icon -->
+          {#if !fullsize}
             <i
               class="chevrons-{toggle == 'true' ? 'up' : 'down'}"
               on:click={() => {
-                scrollTop();
                 toggle = toggle == 'mixed' || toggle == 'false' ? 'true' : 'false';
+                scrollTop();
               }} />
+
             <label for="image">
 
               <!-- Toggle full form opening if clicked on image icon -->
               <i
                 class="image"
                 on:click={() => {
-                  scrollTop();
                   toggle = 'true';
+                  scrollTop();
                 }} />
             </label>
-          </div>
-          <div>
-            <span>{140 - title.length}</span>
-            <Button
-              name={'Спросить'}
-              small={true}
-              on:click
-              {disabled}
-              on:click={() => toggle == 'true' && (toggle = 'false')} />
-          </div>
+          {:else}
+            <i class="trash" on:click={() => dispatcher('delete', { id: 1 })} />
+            <label for="image">
+              <i class="image" />
+            </label>
+          {/if}
+        </div>
+        <div>
+          <span>{140 - title.length}</span>
+          <Button
+            name={button}
+            small={true}
+            on:click
+            {disabled}
+            on:click={() => {
+              if (!fullsize) {
+                toggle == 'true' && (toggle = 'false');
+                scrollTop();
+              }
+            }} />
         </div>
       </div>
     </div>
-  {/if}
-  <slot />
-</div>
+  </div>
+{/if}
 
 <!-- Hidden file input element -->
 <input
@@ -283,4 +286,4 @@
   id="image"
   bind:files
   accept=".jpg,.jpeg,.png,.gif"
-  on:change />
+  on:change={addImage} />

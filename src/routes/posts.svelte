@@ -1,19 +1,17 @@
 <script>
   import Head from "../components/head.svelte";
   import Write from "../components/writePost.svelte";
-  import Tweet from "../components/tweet.svelte";
+  import Card from "../components/card.svelte";
   import { host, post, upload } from "../main";
   import { onMount } from "svelte";
 
   $: posts = [];
   async function update() {
-    setTimeout(async () => {
-      let res = await fetch(host + "/api/posts");
-      posts = await res.json();
-      if (posts == null) {
-        posts = [];
-      }
-    }, 200);
+    let res = await fetch(host + "/api/posts");
+    posts = await res.json();
+    if (posts == null) {
+      posts = [];
+    }
   }
 
   // Initial posts loading
@@ -54,17 +52,16 @@
 <Head title="Вопросы">
   <i class="filter" />
 </Head>
-
-<Write
-  bind:files
-  bind:title
-  bind:longtext
-  bind:chosenCats
-  on:click={questionSubmit}
-  on:change={addImage}>
-
+<div class="scrollable">
+  <Write
+    bind:files
+    bind:title
+    bind:longtext
+    bind:chosenCats
+    on:click={questionSubmit}
+    on:change={addImage} />
   {#each posts as p}
-    <Tweet {...p} />
+    <Card {...p} />
   {/each}
 
-</Write>
+</div>

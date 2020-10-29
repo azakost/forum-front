@@ -1,28 +1,28 @@
 <script>
   import Head from "../components/head.svelte";
-  import Write from "../components/writeComment.svelte";
+  import Card from "../components/card.svelte";
+  import Textarea from "../components/textarea.svelte";
+  import Button from "../components/button.svelte";
   import Comment from "../components/comment.svelte";
   import Post from "../components/postLayout.svelte";
-  import { host, username, currentAuthor, post } from "../main";
-  import { onMount } from "svelte";
+  import { get, username, currentPost, post, id } from "../main";
 
   export let params;
-  $: post = {};
-  async function viewPost() {
-    let res = await fetch(host + "/api/posts?postID=" + params.id);
-    let json = await res.json();
-    post = json[0];
-  }
+  let comments = [];
+  const viewPost = async () => await get("/post?postID=" + params.id);
+  const getComments = async () => {
+    comments = await get("/comments?postID=" + params.id);
+    if (comments == null) comments = [];
+  };
+  viewPost();
+  getComments();
 
-  // Initial posts loading
-  onMount(async () => await viewPost());
-
+  let lastReact = "";
   async function like(e) {
     let res = await post("/reaction", {
       postID: e.detail.id,
       reaction: "like"
     });
-    if (res.ok) viewPost();
   }
 
   async function dislike(e) {
@@ -32,22 +32,54 @@
     });
   }
 
+  async function plus(e) {
+    let res = await post("/reaction", {
+      commentID: e.detail.id,
+      reaction: "like"
+    });
+  }
+
+  async function minus(e) {
+    let res = await post("/reaction", {
+      commentID: e.detail.id,
+      reaction: "dislike"
+    });
+  }
+
   function report(e) {
     alert("report");
   }
 
-  function writeComment() {
-    alert("Write");
+  let value = "";
+  async function writeComment() {
+    let res = await post("/writecomment", {
+      postID: parseInt(params.id),
+      comment: value
+    });
+    if (res.ok) {
+      getComments();
+      value = "";
+    }
   }
 </script>
 
-<Head title="Вопрос от @{$currentAuthor}" secondLevel={true} />
+<Head title="Вопрос от @{$currentPost.user}" secondLevel={true} />
 
-<Post {...post} on:like={like} on:dislike={dislike} on:report={report}>
-  <div slot="write">
-    <Write on:click={writeComment} />
-  </div>
-  <div slot="comments">
-    <Comment />
-  </div>
-</Post>
+<div class="scrollable">
+  {#await viewPost() then post}
+    <Post {...post} on:like={like} on:dislike={dislike} on:edit={report} />
+  {/await}
+  {#if $username != ''}
+    <Card uid={$id}>
+      <div slot="blank">
+        <Textarea placeholder="Ваш комментарий" autoresize={true} bind:value />
+        <br style="display:block; margin: 8px" />
+        <Button name="Опубликовать" small={true} on:click={writeComment} />
+      </div>
+    </Card>
+  {/if}
+  {#each comments as com}
+    <Card {...com} on:plus={plus} on:minus={minus} />
+  {/each}
+
+</div>

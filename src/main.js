@@ -11,7 +11,7 @@ export const fullname = writable(inStore("fullname", ""));
 export const tmpuser = writable(inStore("tmpuser", ""));
 export const id = writable(inStore("id", 0));
 export const update = writable("");
-export const currentAuthor = writable("");
+export const currentPost = writable({});
 
 export const host = "http://localhost:8080";
 
@@ -28,6 +28,13 @@ export const post = async (url, body) => {
     body: JSON.stringify(body),
   });
   return res;
+};
+
+export const get = async (url) => {
+  let res = await fetch(host + "/api" + url, {
+    credentials: "include",
+  });
+  return await res.json();
 };
 
 export const upload = async (url, name, files) => {

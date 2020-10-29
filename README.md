@@ -9,10 +9,19 @@ TODO:
 - [x] Posts view
 - [x] Write short post
 - [x] Write long post (+image attach)
-- [ ] Posts filtering & search
-- [ ] Single post view
-- [ ] Long post text formatting
-- [ ] Post reactions
-- [ ] Comment post
-- [ ] Comment reactions
-- [ ] Profile Edit (sex, age, social links)
+- [x] Single post view
+- [x] Post reactions
+- [x] Comment post
+- [x] Comment reactions
+- [x] Post edit/delete
+- [ ] Post report modal window
+- [ ] Profile Edit (profile pic, sex, age, social links)
+- [ ] Notification page
+- [ ] User profile view
+- [ ] User Karma
+- [ ] Ranking users by karma
+- [ ] Rightbar panels:
+- [ ] - Posts filtering & search (when viewing Questions page)
+- [ ] - Authors main stats page & recent questions (when viewing post)
+- [ ] - Styling settings (when viewing self profile)
+- [ ] - Forum rules (when writing/updaing post)

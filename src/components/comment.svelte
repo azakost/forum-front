@@ -53,7 +53,15 @@
     color: var(--secondary-color);
   }
   span {
-    font-weight: 600;
+    font-weight: 400;
+    opacity: 0.8;
+    font-size: 13px;
+  }
+
+  p {
+    margin-top: 4px;
+    font-size: 13px;
+    font-weight: 200;
   }
 </style>
 

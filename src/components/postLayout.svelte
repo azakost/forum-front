@@ -1,6 +1,7 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { currentAuthor, host } from "../main";
+  import { currentPost, host, id } from "../main";
+  import Card from "../components/card.svelte";
   const dispatcher = createEventDispatcher();
   export let Title;
   export let Categories;
@@ -9,50 +10,50 @@
   export let PostID;
   export let AuthorID;
   export let Username;
-  currentAuthor.set(Username);
+  export let Likes;
+  export let Dislikes;
+
+  const categs = obj => {
+    let cats = [];
+    obj.forEach(e => {
+      cats.push(e.ID);
+    });
+    return cats;
+  };
+
+  currentPost.set({
+    title: Title,
+    text: Text,
+    user: Username,
+    cats: categs(Categories)
+  });
+
+  $: react = Reaction;
+  $: count = Likes - Dislikes;
 </script>
 
 <style>
-  .post {
-    height: calc(100vh - 52px);
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .long {
+    font-size: 14px;
     font-weight: 200;
     line-height: 1.8;
-    font-size: 13px;
-    overflow: auto;
   }
 
-  @media only screen and (max-width: 500px) {
-    .post {
-      height: calc(100vh - 47px - 52px);
-    }
-  }
-  .short,
   .long,
   .actions {
     border-bottom: var(--border);
     padding: 16px;
   }
 
-  .short {
-    display: grid;
-    grid-template-columns: 38px auto;
-  }
-
-  .short > div > * {
-    display: block;
-  }
   small {
+    line-height: 1.8;
+    font-weight: 200;
+    font-size: 13px;
     opacity: 0.4;
   }
+
   i {
     opacity: 0.8;
-  }
-  span {
-    margin-bottom: 8px;
-    font-weight: 500;
-    font-size: 13px;
   }
 
   .actions,
@@ -63,7 +64,7 @@
   }
 
   .actions > div {
-    width: 50px;
+    width: 80px;
   }
 
   .like > .thumbs-up,
@@ -72,43 +73,83 @@
     color: var(--secondary-color);
   }
 
-  img {
-    border-radius: 50%;
-    margin-top: 6px;
-    height: 38px;
+  p {
+    font-weight: 200;
+    font-size: 14px;
+    line-height: 1.8;
   }
-  .content {
-    margin-left: 16px;
+
+  .count {
+    margin: 0 8px;
   }
 </style>
 
-<div class="post">
-  <div class="short">
-    <a href="#/users/{AuthorID}">
-      <img src="{host}/avatars/{AuthorID}.jpg" alt="" />
-    </a>
-    <div class="content">
-      <span>{Title}</span>
-      <div>
-        {#each Categories as cat}
-          <small>#{cat.Name}</small>
-          &nbsp;
-        {/each}
-      </div>
+<Card uid={AuthorID}>
+  <div slot="blank">
+    <p>{Title}</p>
+    <div class="cats">
+      {#each Categories as cat}
+        <small>#{cat.Name}</small>
+        &nbsp;
+      {/each}
     </div>
   </div>
-  {#if Text != ''}
-    <div class="long">
-      {@html Text}
-    </div>
-  {/if}
-  <div class="actions">
-    <i class="alert-triangle" on:click={dispatcher('report', { id: PostID })} />
-    <div class={Reaction}>
-      <i class="thumbs-up" on:click={dispatcher('like', { id: PostID })} />
-      <i class="thumbs-down" on:click={dispatcher('dislike', { id: PostID })} />
-    </div>
+
+</Card>
+
+{#if Text != ''}
+  <div class="long">
+    {@html Text}
   </div>
-  <slot name="write" />
-  <slot name="comments" />
+{/if}
+<div class="actions">
+  <div>
+    {#if AuthorID == $id}
+      <a href="#/edit/{PostID}">
+        <i class="edit" />
+      </a>
+    {:else}
+      <i
+        class="flag"
+        on:click={() => {
+          dispatcher('edit', { id: PostID });
+        }} />
+    {/if}
+  </div>
+
+  <div class={react}>
+    <i
+      class="thumbs-up"
+      on:click={() => {
+        dispatcher('like', { id: PostID });
+        if (react == 'like') {
+          react = 'idle';
+          count--;
+        } else if (react == 'dislike') {
+          count = count + 2;
+          react = 'like';
+        } else {
+          count++;
+          react = 'like';
+        }
+      }} />
+
+    <small class="count">{count}</small>
+
+    <i
+      class="thumbs-down"
+      on:click={() => {
+        dispatcher('dislike', { id: PostID });
+        if (react == 'dislike') {
+          react = 'idle';
+          count++;
+        } else if (react == 'like') {
+          count = count - 2;
+          react = 'dislike';
+        } else {
+          count--;
+          react = 'dislike';
+        }
+      }} />
+  </div>
 </div>
