@@ -1,6 +1,13 @@
 import App from "./App.svelte";
 import { writable } from "svelte/store";
 
+export const host = "http://localhost:8080";
+
+export const save = (name, store, value) => {
+  store.set(value);
+  localStorage.setItem(name, value);
+};
+
 const inStore = (name, defval) => {
   let l = localStorage.getItem(name);
   return l == null ? defval : l;
@@ -11,15 +18,6 @@ export const fullname = writable(inStore("fullname", ""));
 export const tmpuser = writable(inStore("tmpuser", ""));
 export const id = writable(inStore("id", 0));
 export const update = writable("");
-export const currentPost = writable({});
-
-export const host = "http://localhost:8080";
-
-export const categories = async () => {
-  let res = await fetch(host + "/api/categories");
-  let json = await res.json();
-  return json;
-};
 
 export const post = async (url, body) => {
   let res = await fetch(host + "/api" + url, {

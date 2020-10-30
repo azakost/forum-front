@@ -118,7 +118,11 @@
             <i
               class="plus"
               on:click={() => {
-                dispatcher('plus', { id: cid });
+                dispatcher('plus', {
+                  id: cid,
+                  reaction: 'like',
+                  type: 'comment'
+                });
                 if (react == 'like') {
                   react = 'idle';
                   count--;
@@ -136,7 +140,11 @@
             <i
               class="minus"
               on:click={() => {
-                dispatcher('minus', { id: cid });
+                dispatcher('minus', {
+                  id: cid,
+                  reaction: 'dislike',
+                  type: 'comment'
+                });
                 if (react == 'dislike') {
                   react = 'idle';
                   count++;

@@ -1,49 +1,38 @@
 <script>
-  import Head from "../components/head.svelte";
+  import Head from "../elements/head.svelte";
+  import Textarea from "../elements/textarea.svelte";
+  import Button from "../elements/button.svelte";
+
   import Card from "../components/card.svelte";
-  import Textarea from "../components/textarea.svelte";
-  import Button from "../components/button.svelte";
-  import Comment from "../components/comment.svelte";
-  import Post from "../components/postLayout.svelte";
-  import { get, username, currentPost, post, id } from "../main";
+  import Article from "../components/article.svelte";
+
+  import { get, username, post, id } from "../main";
 
   export let params;
-  let comments = [];
+
   const viewPost = async () => await get("/post?postID=" + params.id);
-  const getComments = async () => {
+
+  let comments = [];
+  (async function getComments() {
     comments = await get("/comments?postID=" + params.id);
     if (comments == null) comments = [];
-  };
-  viewPost();
-  getComments();
+  })();
 
-  let lastReact = "";
-  async function like(e) {
-    let res = await post("/reaction", {
-      postID: e.detail.id,
-      reaction: "like"
-    });
-  }
-
-  async function dislike(e) {
-    let res = await post("/reaction", {
-      postID: e.detail.id,
-      reaction: "dislike"
-    });
-  }
-
-  async function plus(e) {
-    let res = await post("/reaction", {
-      commentID: e.detail.id,
-      reaction: "like"
-    });
-  }
-
-  async function minus(e) {
-    let res = await post("/reaction", {
-      commentID: e.detail.id,
-      reaction: "dislike"
-    });
+  async function react(e) {
+    let emo = e.detail.reaction;
+    let obj;
+    if (e.detail.type == "article") {
+      obj = {
+        postID: e.detail.id,
+        reaction: emo
+      };
+    } else {
+      obj = {
+        commentID: e.detail.id,
+        reaction: emo
+      };
+    }
+    let res = await post("/reaction", obj);
   }
 
   function report(e) {
@@ -63,11 +52,11 @@
   }
 </script>
 
-<Head title="Вопрос от @{$currentPost.user}" secondLevel={true} />
+<Head title="Вопрос" secondLevel={true} />
 
 <div class="scrollable">
   {#await viewPost() then post}
-    <Post {...post} on:like={like} on:dislike={dislike} on:edit={report} />
+    <Article {...post} on:like={react} on:dislike={react} on:edit={report} />
   {/await}
   {#if $username != ''}
     <Card uid={$id}>
@@ -79,7 +68,7 @@
     </Card>
   {/if}
   {#each comments as com}
-    <Card {...com} on:plus={plus} on:minus={minus} />
+    <Card {...com} on:plus={react} on:minus={react} />
   {/each}
 
 </div>

@@ -1,35 +1,20 @@
 <script>
-  import { createEventDispatcher } from "svelte";
-  import { currentPost, host, id } from "../main";
   import Card from "../components/card.svelte";
+  import { host, id } from "../main";
+  import { createEventDispatcher } from "svelte";
   const dispatcher = createEventDispatcher();
+
   export let Title;
   export let Categories;
   export let Reaction;
   export let Text;
   export let PostID;
   export let AuthorID;
-  export let Username;
   export let Likes;
   export let Dislikes;
-
-  const categs = obj => {
-    let cats = [];
-    obj.forEach(e => {
-      cats.push(e.ID);
-    });
-    return cats;
-  };
-
-  currentPost.set({
-    title: Title,
-    text: Text,
-    user: Username,
-    cats: categs(Categories)
-  });
-
-  $: react = Reaction;
+  export let Username;
   $: count = Likes - Dislikes;
+  $: react = Reaction;
 </script>
 
 <style>
@@ -52,8 +37,13 @@
     opacity: 0.4;
   }
 
-  i {
+  i,
+  span {
     opacity: 0.8;
+  }
+
+  span {
+    font-size: 13px;
   }
 
   .actions,
@@ -86,6 +76,7 @@
 
 <Card uid={AuthorID}>
   <div slot="blank">
+    <span>@{Username}</span>
     <p>{Title}</p>
     <div class="cats">
       {#each Categories as cat}
@@ -121,7 +112,7 @@
     <i
       class="thumbs-up"
       on:click={() => {
-        dispatcher('like', { id: PostID });
+        dispatcher('like', { id: PostID, reaction: 'like', type: 'article' });
         if (react == 'like') {
           react = 'idle';
           count--;
@@ -139,7 +130,11 @@
     <i
       class="thumbs-down"
       on:click={() => {
-        dispatcher('dislike', { id: PostID });
+        dispatcher('dislike', {
+          id: PostID,
+          reaction: 'dislike',
+          type: 'article'
+        });
         if (react == 'dislike') {
           react = 'idle';
           count++;

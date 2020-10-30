@@ -1,5 +1,5 @@
 <script>
-  import Head from "../components/head.svelte";
+  import Head from "../elements/head.svelte";
   import { push } from "svelte-spa-router";
   import { post, upload, username, fullname, id, update, host } from "../main";
 

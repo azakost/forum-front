@@ -1,15 +1,30 @@
 <script>
-  import Head from "../components/head.svelte";
-  import Write from "../components/writePost.svelte";
-  import { currentPost, post } from "../main";
-  import { push, pop } from "svelte-spa-router";
+  import Head from "../elements/head.svelte";
+  import Editor from "../components/editor.svelte";
+
+  import { post, get } from "../main";
+  import { pop } from "svelte-spa-router";
 
   export let params;
 
   let files;
-  let title = $currentPost.title;
-  let longtext = $currentPost.text;
-  let chosenCats = $currentPost.cats;
+  let title = "";
+  let longtext = "";
+  let chosenCats = [];
+
+  (async function getPost() {
+    const categs = obj => {
+      let cats = [];
+      obj.forEach(e => {
+        cats.push(e.ID);
+      });
+      return cats;
+    };
+    let j = await get("/post?postID=" + params.id);
+    title = j.Title;
+    longtext = j.Text;
+    chosenCats = categs(j.Categories);
+  })();
 
   async function deletePost(e) {
     if (confirm("Вы уверены?")) {
@@ -17,9 +32,7 @@
         postID: parseInt(params.id),
         status: 0
       });
-      if (res.ok) {
-        push("/");
-      }
+      if (res.ok) window.location = "/";
     }
   }
 
@@ -31,14 +44,12 @@
       categories: chosenCats,
       status: 1
     });
-    if (res.ok) {
-      pop();
-    }
+    if (res.ok) pop();
   }
 </script>
 
 <Head title="Редактирование" secondLevel={true} />
-<Write
+<Editor
   bind:files
   bind:title
   bind:longtext

@@ -1,7 +1,8 @@
 <script>
+  import { pop } from "svelte-spa-router";
+
   export let secondLevel = false;
   export let title = "No title";
-  import { pop } from "svelte-spa-router";
 </script>
 
 <style>

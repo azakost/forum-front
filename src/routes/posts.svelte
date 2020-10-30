@@ -1,21 +1,19 @@
 <script>
-  import Head from "../components/head.svelte";
-  import Write from "../components/writePost.svelte";
+  import Head from "../elements/head.svelte";
+
+  import Editor from "../components/editor.svelte";
   import Card from "../components/card.svelte";
+
   import { host, post, upload } from "../main";
-  import { onMount } from "svelte";
 
   $: posts = [];
-  async function update() {
+  (async function update() {
     let res = await fetch(host + "/api/posts");
     posts = await res.json();
     if (posts == null) {
       posts = [];
     }
-  }
-
-  // Initial posts loading
-  onMount(async () => await update());
+  })();
 
   // Question submit
   let title = "";
@@ -53,7 +51,7 @@
   <i class="filter" />
 </Head>
 <div class="scrollable">
-  <Write
+  <Editor
     bind:files
     bind:title
     bind:longtext

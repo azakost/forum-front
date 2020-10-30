@@ -1,7 +1,8 @@
 <script>
+  import Button from "../elements/button.svelte";
+  import Textarea from "../elements/textarea.svelte";
+
   import { username, cats, upload, host } from "../main";
-  import Button from "../components/button.svelte";
-  import Textarea from "../components/textarea.svelte";
   import { createEventDispatcher } from "svelte";
   const dispatcher = createEventDispatcher();
   export let title;

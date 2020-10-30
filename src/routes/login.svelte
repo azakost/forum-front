@@ -1,9 +1,9 @@
 <script>
-  import Head from "../components/head.svelte";
-  import Input from "../components/input.svelte";
-  import Button from "../components/button.svelte";
-  import { post, tmpuser, username, fullname, id } from "../main";
-  import { push } from "svelte-spa-router";
+  import Head from "../elements/head.svelte";
+  import Input from "../elements/input.svelte";
+  import Button from "../elements/button.svelte";
+
+  import { post, tmpuser, username, fullname, id, save } from "../main";
 
   $: user = $tmpuser;
   $: pass = "";
@@ -13,14 +13,10 @@
     let res = await post("/login", { username: user, password: pass });
     if (res.ok) {
       let json = await res.json();
-      username.set(json.username);
-      fullname.set(json.fullname);
-      id.set(0);
-      id.set(json.userID);
-      localStorage.setItem("id", json.userID);
-      localStorage.setItem("username", json.username);
-      localStorage.setItem("fullname", json.fullname);
-      push("/");
+      save("id", id, json.userID);
+      save("username", username, json.username);
+      save("fullname", fullname, json.fullname);
+      window.location = "/";
     } else {
       shake = "shake";
       setTimeout(() => (shake = ""), 500);
@@ -67,11 +63,11 @@
   }
 </style>
 
-<Head title={'Вход в систему'} />
+<Head title="Вход в систему" />
 <div class="form {shake}">
-  <Input name={'Имя пользователя'} bind:value={user} />
-  <Input name={'Пароль'} type={'password'} bind:value={pass} />
-  <Button name={'Войти'} on:click={login} />
+  <Input name="Имя пользователя" bind:value={user} />
+  <Input name="Пароль" type="password" bind:value={pass} />
+  <Button name="Войти" on:click={login} />
 </div>
 <div class="sub">
   <a href="http://ya.ru">
