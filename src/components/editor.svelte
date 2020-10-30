@@ -90,6 +90,7 @@
     font-size: 13px;
     line-height: 1.8;
     overflow: auto;
+    height: 0;
   }
 
   .editor[aria-checked="true"]:empty:not(:focus):before {

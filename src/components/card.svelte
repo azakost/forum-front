@@ -29,8 +29,11 @@
     padding: 16px;
   }
   img {
-    width: 100%;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   .head,
@@ -97,7 +100,9 @@
         <span>@{username}</span>
         <small>{formatDate(created)}</small>
       </div>
-      <p>{text}</p>
+      <p>
+        {@html text}
+      </p>
       <div class="foot">
         <div>
           {#if cid == 0}

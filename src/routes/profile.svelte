@@ -1,17 +1,17 @@
 <script>
   import Head from "../elements/head.svelte";
-  import { push } from "svelte-spa-router";
-  import { post, upload, username, fullname, id, update, host } from "../main";
+  import {
+    post,
+    upload,
+    username,
+    fullname,
+    id,
+    update,
+    host,
+    logout
+  } from "../main";
 
   $: userid = $id;
-
-  async function logout() {
-    await post("/logout");
-    localStorage.clear();
-    username.set("");
-    fullname.set("");
-    push("/");
-  }
 
   let files;
   function uploadAva() {
@@ -19,11 +19,9 @@
       let res = await upload("/uploadava", "avatar", files);
       if (res.ok) {
         let i = $id;
-        id.set(0);
         id.set(i);
         update.set(Date.now());
       }
-      console.log(res);
     }, 200);
   }
 </script>
@@ -39,6 +37,9 @@
   img {
     border-radius: 50%;
     height: 200px;
+    width: 200px;
+    object-fit: cover;
+    object-position: 50% 50%;
   }
 
   .imgUpload {

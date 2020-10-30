@@ -127,6 +127,8 @@
     border-radius: 50%;
     margin: 0 19px;
     height: 30px;
+    width: 30px;
+    object-fit: cover;
   }
 
   ul:last-child {

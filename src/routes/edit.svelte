@@ -4,15 +4,21 @@
 
   import { post, get } from "../main";
   import { pop } from "svelte-spa-router";
+  import { onMount } from "svelte";
 
   export let params;
 
   let files;
-  let title = "";
-  let longtext = "";
-  let chosenCats = [];
 
-  (async function getPost() {
+  $: title = "";
+  $: longtext = "";
+  $: chosenCats = [];
+
+  $: if (params.id) getPosts();
+
+  async function getPosts() {
+    let res = await get("/post?postID=" + params.id);
+
     const categs = obj => {
       let cats = [];
       obj.forEach(e => {
@@ -20,11 +26,10 @@
       });
       return cats;
     };
-    let j = await get("/post?postID=" + params.id);
-    title = j.Title;
-    longtext = j.Text;
-    chosenCats = categs(j.Categories);
-  })();
+    title = res.Title;
+    longtext = res.Text;
+    chosenCats = categs(res.Categories);
+  }
 
   async function deletePost(e) {
     if (confirm("Вы уверены?")) {
@@ -49,6 +54,7 @@
 </script>
 
 <Head title="Редактирование" secondLevel={true} />
+
 <Editor
   bind:files
   bind:title

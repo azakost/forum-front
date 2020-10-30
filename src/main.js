@@ -25,6 +25,7 @@ export const post = async (url, body) => {
     credentials: "include",
     body: JSON.stringify(body),
   });
+  if (res.status == 403) logout();
   return res;
 };
 
@@ -44,12 +45,21 @@ export const upload = async (url, name, files) => {
     method: "POST",
     body: formData,
   });
+  if (res.status == 403) logout();
   return res;
 };
 
 export const cats = async () => {
   let res = await fetch(host + "/api/categories");
   return await res.json();
+};
+
+export const logout = async () => {
+  localStorage.clear();
+  username.set("");
+  fullname.set("");
+  await post("/logout");
+  window.location = "/#/login";
 };
 
 export const formatDate = (secs) => {

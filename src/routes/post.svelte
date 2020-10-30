@@ -10,13 +10,13 @@
 
   export let params;
 
-  const viewPost = async () => await get("/post?postID=" + params.id);
+  $: viewPost = async () => await get("/post?postID=" + params.id);
+  $: getComments = async () => {
+    let res = await get("/comments?postID=" + params.id);
+    return res == null ? [] : res;
+  };
 
-  let comments = [];
-  (async function getComments() {
-    comments = await get("/comments?postID=" + params.id);
-    if (comments == null) comments = [];
-  })();
+  $: comments = getComments();
 
   async function react(e) {
     let emo = e.detail.reaction;
@@ -46,7 +46,7 @@
       comment: value
     });
     if (res.ok) {
-      getComments();
+      comments = getComments();
       value = "";
     }
   }
@@ -67,8 +67,12 @@
       </div>
     </Card>
   {/if}
-  {#each comments as com}
-    <Card {...com} on:plus={react} on:minus={react} />
-  {/each}
+  {#await comments}
+    <p>Loading...</p>
+  {:then com}
+    {#each com as c}
+      <Card {...c} on:plus={react} on:minus={react} />
+    {/each}
+  {/await}
 
 </div>

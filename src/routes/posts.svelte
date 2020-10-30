@@ -7,13 +7,14 @@
   import { host, post, upload } from "../main";
 
   $: posts = [];
-  (async function update() {
+  update();
+  async function update() {
     let res = await fetch(host + "/api/posts");
     posts = await res.json();
     if (posts == null) {
       posts = [];
     }
-  })();
+  }
 
   // Question submit
   let title = "";
