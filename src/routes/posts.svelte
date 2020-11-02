@@ -4,17 +4,16 @@
   import Editor from "../components/editor.svelte";
   import Card from "../components/card.svelte";
 
-  import { host, post, upload } from "../main";
+  import { host, post, upload, filter, sort } from "../main";
 
-  $: posts = [];
-  update();
-  async function update() {
-    let res = await fetch(host + "/api/posts");
-    posts = await res.json();
-    if (posts == null) {
-      posts = [];
-    }
-  }
+  $: update = async () => {
+    let res = await fetch(
+      host + "/api/posts?cat=" + $filter + "&byreact=" + $sort
+    );
+    return await res.json();
+  };
+
+  $: posts = update();
 
   // Question submit
   let title = "";
@@ -29,7 +28,7 @@
 
     if (res.ok) {
       // Update posts list after submission and clear form
-      update();
+      posts = update();
       title = "";
       longtext = "";
       chosenCats = [];
@@ -59,8 +58,12 @@
     bind:chosenCats
     on:click={questionSubmit}
     on:change={addImage} />
-  {#each posts as p}
-    <Card {...p} />
-  {/each}
+  {#await posts then posts}
+    {#if posts != null}
+      {#each posts as p}
+        <Card {...p} />
+      {/each}
+    {/if}
+  {/await}
 
 </div>

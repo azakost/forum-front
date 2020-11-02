@@ -4,6 +4,8 @@ import Login from "./routes/login.svelte";
 import Profile from "./routes/profile.svelte";
 import Register from "./routes/register.svelte";
 import Edit from "./routes/edit.svelte";
+import Soon from "./routes/soon.svelte";
+import NotFound from "./routes/404.svelte";
 export const routes = new Map();
 
 routes.set("/", Posts);
@@ -13,3 +15,7 @@ routes.set("/profile", Profile);
 routes.set("/register", Register);
 routes.set("/posts/:id", Post);
 routes.set("/edit/:id", Edit);
+routes.set("/knowlege", Soon);
+routes.set("/ranking", Soon);
+routes.set("/notify", Soon);
+routes.set("*", NotFound);

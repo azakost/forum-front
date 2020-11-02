@@ -179,10 +179,11 @@
   </div>
 
   <div class="basic">
+
     {#if $username != ''}
       <a href="/#/profile" class="login {page == 'profile' && 'hide'}">
         <img
-          src="{host}/avatars/{userid}.jpg?update={$update}"
+          src="{host}/avatars/{userid}.jpg?u={$update}"
           alt=""
           on:error={() => (userid = 0)} />
         <li>
@@ -193,6 +194,7 @@
     {:else}
       <a href="/#/login" class="login {page == 'login' && 'hide'}">
         <img src="lock.png" alt="" />
+
         <li>
           <ul>Привет, студент!</ul>
           <ul>Залогинься плиз...</ul>

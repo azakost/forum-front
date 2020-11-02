@@ -17,7 +17,10 @@ export const username = writable(inStore("username", ""));
 export const fullname = writable(inStore("fullname", ""));
 export const tmpuser = writable(inStore("tmpuser", ""));
 export const id = writable(inStore("id", 0));
-export const update = writable("");
+export const update = writable(Date.now());
+
+export const filter = writable("");
+export const sort = writable("");
 
 export const post = async (url, body) => {
   let res = await fetch(host + "/api" + url, {

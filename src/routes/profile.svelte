@@ -16,11 +16,12 @@
   let files;
   function uploadAva() {
     setTimeout(async () => {
+      let uid = $id;
+      id.set(0);
       let res = await upload("/uploadava", "avatar", files);
       if (res.ok) {
-        let i = $id;
-        id.set(i);
         update.set(Date.now());
+        id.set(uid);
       }
     }, 200);
   }
