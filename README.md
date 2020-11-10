@@ -1,6 +1,9 @@
 # Front-end application for Alem Community Forum
 Server application - https://github.com/azakost/forum-Go
 
+![alt text](https://github.com/[username]/[reponame]/screen.png?raw=true)
+
+
 TODO:
 
 - [x] Adaptive layout
