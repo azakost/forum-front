@@ -1,8 +1,8 @@
 # Front-end application for Alem Community Forum
 Server application - https://github.com/azakost/forum-Go
 
-![alt text](https://github.com/[username]/[reponame]/screen.png?raw=true)
-
+![Desktop](https://github.com/azakost/forum-front/blob/main/screen.png?raw=true)
+![mobile](https://github.com/azakost/forum-front/blob/main/mobile.png?raw=true)
 
 TODO:
 
